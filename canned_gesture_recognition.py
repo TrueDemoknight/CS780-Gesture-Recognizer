@@ -4,18 +4,17 @@ import mediapipe as mp
 # Import the tasks API for gesture recognition
 from mediapipe.tasks.python.vision import GestureRecognizer, GestureRecognizerOptions
 from mediapipe.tasks.python import BaseOptions
-from mediapipe.framework.formats import landmark_pb2
 
 import webbrowser
 import time
 import pyautogui
 
 # Path to the gesture recognition model
-model_path = "gesture_recognizer.task"  # Update this to the correct path where the model is saved
+GESTURE_MODEL = "gesture_recognizer.task"  # Make sure this path matches where you have the model files saved on your computer!
 
 # Initialize the Gesture Recognizer
 options = GestureRecognizerOptions(
-    base_options=BaseOptions(model_asset_path=model_path),
+    base_options=BaseOptions(model_asset_path=GESTURE_MODEL),
     num_hands=1
 )
 gesture_recognizer = GestureRecognizer.create_from_options(options)
