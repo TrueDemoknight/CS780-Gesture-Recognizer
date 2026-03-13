@@ -39,7 +39,7 @@ def pointing(landmarks):
 def palm_flat(landmarks):
   finger_tips = [8, 12, 16, 20]
   finger_pips = [5, 9, 13, 17]
-  
+
   dist = abs(distance(landmarks[5], landmarks[0])) / 5
   for i in range(3):
     if abs(landmarks[finger_tips[i]][1] - landmarks[finger_tips[i + 1]][1]) > dist or abs(landmarks[finger_pips[i]][1] - landmarks[finger_pips[i + 1]][1]) > dist:
@@ -93,6 +93,8 @@ cap = cv2.VideoCapture(0)
 
 is_pointing = False
 
+SCROLL_MAGNITUDE = 75
+
 while cap.isOpened():
   ret, frame = cap.read()
   if not ret:
@@ -116,7 +118,7 @@ while cap.isOpened():
 
   if gesture_result.gestures and hand_result.hand_landmarks:
     lm = hand_result.hand_landmarks[0]
-    
+
     landmarks = [(p.x, p.y) for p in lm]
 
     # Draw landmarks
@@ -124,15 +126,15 @@ while cap.isOpened():
       px = int(x * frame.shape[1])
       py = int(y * frame.shape[0])
       cv2.circle(frame, (px, py), 4, (0, 255, 0), -1)
-    
+
     top_gesture = gesture_result.gestures[0][0]
     if top_gesture.category_name != "None":
       detected_text = f"CANNED: {top_gesture.category_name}"
-      
+
       if top_gesture.category_name == "Thumb_Up":
-        pyautogui.scroll(20)
+        pyautogui.scroll(SCROLL_MAGNITUDE)
       elif top_gesture.category_name == "Thumb_Down":
-        pyautogui.scroll(-20)
+        pyautogui.scroll(-SCROLL_MAGNITUDE)
       elif top_gesture.category_name == "Open_Palm":
         ...
       elif top_gesture.category_name == "Closed_Fist":
@@ -159,10 +161,10 @@ while cap.isOpened():
           with pyautogui.hold("alt"):
             pyautogui.press("down")
         time.sleep(.5)
-    
+
     if not pointing(landmarks):
       is_pointing = False
-    
+
 
   cv2.putText(frame, detected_text, (10, 40),
         cv2.FONT_HERSHEY_SIMPLEX,
@@ -175,3 +177,4 @@ while cap.isOpened():
 
 cap.release()
 cv2.destroyAllWindows()
+ 
